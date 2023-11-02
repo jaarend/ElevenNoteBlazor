@@ -89,7 +89,7 @@ namespace ElevenNoteWebApp_2.Server.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            if (!SetUserIdInService() return Unauthorized();
+            if (!SetUserIdInService()) return Unauthorized();
 
             var note = await _noteService.GetNoteByIdAsync(id);
 

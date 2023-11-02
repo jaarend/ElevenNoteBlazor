@@ -1,0 +1,78 @@
+﻿@page "/note/edit/{NoteId:int}"
+@using ElevenNoteWebApp_2.Shared.Models.Note
+@using ElevenNoteWebApp_2.Shared.Models.Category
+@using Microsoft.AspNetCore.Authorization;
+@inject HttpClient Http
+@inject NavigationManager navigation
+@attribute [Authorize]
+
+
+
+<h3>Edit Note: @model.Title</h3>
+
+@if (errorMessage != null)
+{
+	<h5 class="text-danger">@errorMessage</h5>
+}
+
+@if (categories == null)
+{
+	<p><em>Loading...</em></p>
+}
+
+else
+{
+	<div class="container">
+		<EditForm Model="@model" OnValidSubmit="@HandleSubmit">
+			<DataAnnotationsValidator />
+			<ValidationSummary />
+
+			<div class="form-group">
+				<label>Title</label>
+				<InputText class="form-control" @bind-Value="model.Title" />
+			</div>
+			<div class="form-group">
+				<label>Content</label>
+				<InputText class="form-control" @bind-Value="model.Content" />
+			</div>
+			<div>
+				<label>Categories</label>
+				<InputSelect class="form-control" @bind-Value="model.CategoryId">
+					@foreach (var category in categories)
+					{
+						<option value="@category.Id">@category.Name</option>
+					}
+				</InputSelect>
+			</div>
+			<button type="submit" class="btn btn-primary btn-block mt-5">Submit</button>
+		</EditForm>
+	</div>
+}
+
+
+@code {
+	[Parameter]
+	public int NoteId { get; set; }
+	private NoteEdit model { get; set; }
+	private IEnumerable<CategoryListItem> categories;
+	private string errorMessage;
+
+	protected override async Task OnInitializedAsync()
+	{
+		model = await Http.GetFromJsonAsync<NoteEdit>($"/api/note/{NoteId}");
+		categories = await Http.GetFromJsonAsync<IEnumerable<CategoryListItem>>("api/category/");
+	}
+
+	private async void HandleSubmit()
+	{
+		var createRes = await Http.PutAsJsonAsync<NoteEdit>($"/api/note/edit/{NoteId}", model);
+		if (createRes.IsSuccessStatusCode)
+		{
+			navigation.NavigateTo($"/note/{NoteId}");
+		}
+		else
+		{
+			errorMessage = "Could not edit your note. Try again.";
+		}
+	}
+}

@@ -36,7 +36,7 @@ namespace ElevenNoteWebApp_2.Server.Controllers
             return true;
         }
 
-        [HttpPost]
+        [HttpGet]
         public async Task<List<NoteListItem>> Index()
         {
             if (!SetUserIdInService()) return new List<NoteListItem>();

@@ -1,4 +1,4 @@
-﻿@page "/Category/Index"
+﻿@page "/category/index"
 @using ElevenNoteWebApp_2.Shared.Models.Category
 @using Microsoft.AspNetCore.Authorization;
 @inject HttpClient Http
@@ -13,9 +13,6 @@
 }
 else
 {
-	
-}
-
 <table class="table">
 	<thead>
 		<tr>Id</tr>
@@ -31,12 +28,14 @@ else
 		}
 	</tbody>
 </table>
+}
+
 
 @code {
 	private List<CategoryListItem> categories;
 
 	protected override async Task OnInitializedAsync()
 	{
-		categories = await Http.GetFromJsonAsync<List<CategoryListItem>>("Category");
+		categories = await Http.GetFromJsonAsync<List<CategoryListItem>>("api/category");
 	}
 }

@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ElevenNoteWebApp_2.Shared.Models.Note
+namespace ElevenNoteWebApp_2.Shared.Models.Category
 {
-    internal class CategoryDetail
+    public class CategoryDetail
     {
+        public int Id { get; set; }
+        public string Name { get; set; }
     }
 }

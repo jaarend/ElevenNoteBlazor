@@ -88,11 +88,6 @@ namespace ElevenNoteWebApp_2.Server.Services.Note
             return detail;
         }
 
-        public void SetUserId(string userId)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<bool> UpdateNoteAsync(NoteEdit model)
         {
             if (model == null)
@@ -110,7 +105,7 @@ namespace ElevenNoteWebApp_2.Server.Services.Note
             return await _context.SaveChangesAsync() == 1;
         }
 
-        //public void SetUserId(string userId) =>_userId = userId;
+        public void SetUserId(string userId) =>_userId = userId;
         
     }
 }

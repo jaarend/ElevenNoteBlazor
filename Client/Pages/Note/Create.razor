@@ -35,12 +35,15 @@ else
 			<label>Content</label>
 			<InputText class="form-control" @bind-Value="model.Content" />
 		</div>
-		<InputSelect class="form-control" @bind-Value="model.CategoryId">
-			@foreach (var category in categories)
-			{
-				<option value="@category.Id">@category.Name</option>
-			}
-		</InputSelect>
+		<div>
+			<label>Categories</label>
+			<InputSelect class="form-control" @bind-Value="model.CategoryId">
+				@foreach (var category in categories)
+				{
+					<option value="@category.Id">@category.Name</option>
+				}
+			</InputSelect>
+		</div>
 		<button type="submit" class="btn btn-primary btn-block mt-5">Submit</button>
 	</EditForm>
 </div>

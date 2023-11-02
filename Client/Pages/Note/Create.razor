@@ -1,0 +1,73 @@
+﻿@page "/note/create"
+@using ElevenNoteWebApp_2.Shared.Models.Note
+@using ElevenNoteWebApp_2.Shared.Models.Category
+@using Microsoft.AspNetCore.Authorization;
+@inject HttpClient Http
+@inject NavigationManager navigation
+@attribute [Authorize]
+
+
+
+<h3>Create</h3>
+
+@if (errorMessage != null)
+{
+	<h5 class="text-danger">@errorMessage</h5>
+}
+
+@if(categories == null)
+{
+	<p><em>Loading...</em></p>
+}
+
+else
+{
+<div class="container">
+	<EditForm Model="@model" OnValidSubmit="@HandleSubmit">
+		<DataAnnotationsValidator />
+		<ValidationSummary />
+
+		<div class="form-group">
+			<label>Title</label>
+			<InputText class="form-control" @bind-Value="model.Title" />
+		</div>
+		<div class="form-group">
+			<label>Content</label>
+			<InputText class="form-control" @bind-Value="model.Content" />
+		</div>
+		<InputSelect class="form-control" @bind-Value="model.CategoryId">
+			@foreach (var category in categories)
+			{
+				<option value="@category.Id">@category.Name</option>
+			}
+		</InputSelect>
+		<button type="submit" class="btn btn-primary btn-block mt-5">Submit</button>
+	</EditForm>
+</div>
+}
+
+
+@code {
+
+	private NoteCreate model = new();
+	private IEnumerable<CategoryListItem> categories;
+	private string errorMessage;
+
+	protected override async Task OnInitializedAsync()
+	{
+		categories = await Http.GetFromJsonAsync<IEnumerable<CategoryListItem>>("api/category/");
+	}
+
+	private async void HandleSubmit()
+	{
+		var createRes = await Http.PostAsJsonAsync<NoteCreate>("/api/note", model);
+		if(createRes.IsSuccessStatusCode)
+		{
+			navigation.NavigateTo("/note");
+		}
+		else
+		{
+			errorMessage = "Could not create your note. Try again.";
+		}
+	}
+}
